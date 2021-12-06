@@ -7,7 +7,9 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
+import {connect, useDispatch} from 'react-redux';
 import TaskList from '../components/task-list/default';
+import {ADD_TASK} from '../redux/actions';
 
 const data = [
   {
@@ -24,11 +26,17 @@ const data = [
   },
 ];
 
-const Home: React.FC = () => {
+const Home: React.FC = ({toDo}) => {
+  console.log({toDo})
+  const dispatch = useDispatch();
   const [value, setValue] = useState<string>('');
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
+  };
+
+  const handleSubmit = () =>{
+    dispatch(ADD_TASK(value));
   };
 
   return (
@@ -40,7 +48,7 @@ const Home: React.FC = () => {
           style={styles.input}
           onChangeText={handleChange}
         />
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
           <Text style={styles.icon}>+</Text>
         </TouchableOpacity>
       </View>
@@ -81,4 +89,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+const mapStateToProps = ({toDo, done}) => {
+  return {toDo, done};
+};
+
+export default connect(mapStateToProps)(Home);
