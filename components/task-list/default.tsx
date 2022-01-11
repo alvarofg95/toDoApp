@@ -1,23 +1,28 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, Image} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 
 type TaskProps = {
   item: {
     text: string;
+    id: number;
+    done: boolean;
   };
+  checkTask: any;
+  unCheckTask: any;
 };
 
 const checkIcon = require('../../assets/checked.png');
 const unCheckedIcon = require('../../assets/unchecked.png');
 
-const TaskList: React.FC<TaskProps> = ({item}) => {
-  const [checked, setChecked] = useState(false);
-  console.log({item, checked});
-
+const TaskList: React.FC<TaskProps> = ({item, checkTask, unCheckTask}) => {
+  const checked = item.done;
   const handleChange = () => {
-    console.log('handle');
-    setChecked(!checked);
+    if (checked) {
+      unCheckTask(item.id);
+    } else {
+      checkTask(item.id);
+    }
   };
 
   let containerStyle = {...styles.container};
@@ -28,7 +33,6 @@ const TaskList: React.FC<TaskProps> = ({item}) => {
     };
   }
 
-  console.log({checked, containerStyle});
   const {text} = item;
   return (
     <CheckBox
@@ -64,7 +68,8 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
   },
   checked: {
-    backgroundColor: 'red',
+    backgroundColor: '#9d9c9c',
+    borderColor: '#9d9c9c',
   },
 });
 

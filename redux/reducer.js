@@ -2,18 +2,33 @@ import {combineReducers} from 'redux';
 
 const INITIAL_STATE = {
   toDo: [],
-  done: [],
 };
 
 const tasksReducer = (state = INITIAL_STATE, action) => {
-  console.log('>action type', action.type)
   switch (action.type) {
     case 'ADD_TASK': {
-      state.toDo.push(action.payload);
-      return state;
+      const {toDo} = state;
+      toDo.push({id: Date.now().toString(), text: action.payload, done: false});
+      return {...state, toDo};
     }
     case 'LOAD_TASKS': {
-      return state;
+      return {...state};
+    }
+    case 'CHECK_TASK': {
+      const [...toDo] = state.toDo;
+      const taskIndex = toDo.findIndex(item => item.id === action.payload);
+      if (taskIndex > -1) {
+        toDo[taskIndex].done = true;
+      }
+      return {...state, toDo};
+    }
+    case 'UNCHECK_TASK': {
+      const [...toDo] = state.toDo;
+      const taskIndex = toDo.findIndex(item => item.id === action.payload);
+      if (taskIndex > -1) {
+        toDo[taskIndex].done = false;
+      }
+      return {...state, toDo};
     }
     default:
       return state;

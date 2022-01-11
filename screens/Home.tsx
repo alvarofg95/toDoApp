@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,42 +6,53 @@ import {
   TextInput,
   TouchableOpacity,
   Text,
+  Keyboard,
 } from 'react-native';
-import {connect, useDispatch} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import TaskList from '../components/task-list/default';
-import {ADD_TASK} from '../redux/actions';
+import {ADD_TASK, CHECK_TASK, LOAD_TASKS, UNCHECK_TASK} from '../redux/actions';
 
-const data = [
-  {
-    id: 1,
-    text: 'Texto 1',
-  },
-  {
-    id: 2,
-    text: 'Texto 2',
-  },
-  {
-    id: 3,
-    text: 'Texto 3',
-  },
-];
+interface HomeProps extends PropsFromRedux {
+  toDo: any;
+  done: any;
+}
 
-const Home: React.FC = ({toDo}) => {
-  console.log({toDo})
-  const dispatch = useDispatch();
+const Home = (props: HomeProps): JSX.Element => {
+  const {toDo, loadTasks, addTask, setCheckedTask, setUnCheckedTask} = props;
   const [value, setValue] = useState<string>('');
+
+  useEffect(() => {
+    getTasks();
+  });
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
   };
 
-  const handleSubmit = () =>{
-    dispatch(ADD_TASK(value));
+  const getTasks = () => {
+    loadTasks();
+  };
+
+  const handleSubmit = () => {
+    addTask(value);
+    setValue('');
+    Keyboard.dismiss();
   };
 
   return (
     <View style={styles.container}>
-      <FlatList data={data} renderItem={item => <TaskList {...item} />} />
+      <FlatList
+        refreshing={false}
+        onRefresh={getTasks}
+        data={toDo}
+        renderItem={item => (
+          <TaskList
+            {...item}
+            checkTask={setCheckedTask}
+            unCheckTask={setUnCheckedTask}
+          />
+        )}
+      />
       <View style={styles.inputContainer}>
         <TextInput
           value={value}
@@ -89,8 +100,28 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({toDo, done}) => {
-  return {toDo, done};
+interface RootState {
+  tasks: any;
+}
+
+const mapStateToProps = (state: RootState) => {
+  const {
+    tasks: {toDo},
+  } = state;
+  return {toDo};
 };
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    loadTasks: () => dispatch(LOAD_TASKS()),
+    addTask: (value: string) => dispatch(ADD_TASK(value)),
+    setCheckedTask: (id: number) => dispatch(CHECK_TASK(id)),
+    setUnCheckedTask: (id: number) => dispatch(UNCHECK_TASK(id)),
+  };
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(Home);
