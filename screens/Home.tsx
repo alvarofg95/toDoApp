@@ -10,7 +10,11 @@ import {
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import TaskList from '../components/task-list/default';
-import {ADD_TASK, CHECK_TASK, LOAD_TASKS, UNCHECK_TASK} from '../redux/actions';
+import {
+  createTaskRequest,
+  fetchTasksRequest,
+  selectTaskRequest,
+} from '../redux/actions';
 
 interface HomeProps extends PropsFromRedux {
   toDo: any;
@@ -23,7 +27,7 @@ const Home = (props: HomeProps): JSX.Element => {
 
   useEffect(() => {
     getTasks();
-  });
+  }, []);
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
@@ -105,18 +109,20 @@ interface RootState {
 }
 
 const mapStateToProps = (state: RootState) => {
+  console.log('>>> STATE', state);
   const {
     tasks: {toDo},
   } = state;
+  console.log('>>> TO_DOO', toDo);
   return {toDo};
 };
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    loadTasks: () => dispatch(LOAD_TASKS()),
-    addTask: (value: string) => dispatch(ADD_TASK(value)),
-    setCheckedTask: (id: number) => dispatch(CHECK_TASK(id)),
-    setUnCheckedTask: (id: number) => dispatch(UNCHECK_TASK(id)),
+    loadTasks: () => dispatch(fetchTasksRequest()),
+    addTask: (value: string) => dispatch(createTaskRequest(value)),
+    setCheckedTask: (id: string) => dispatch(selectTaskRequest(id)),
+    setUnCheckedTask: (id: string) => dispatch(selectTaskRequest(id)),
   };
 };
 

@@ -1,10 +1,7 @@
 import React from 'react';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
-import reducer from './redux/reducer';
+import store from './redux/store';
 import Routes from './routes/Routes';
-
-const store = createStore(reducer);
 
 const App: React.FC = () => {
   return (
