@@ -27,7 +27,6 @@ type ResponseType = {
 function* fetchTasksSaga() {
   try {
     const response: ResponseType = yield call(getToDoList);
-    console.log({response});
     if (response.success) {
       yield put(fetchTasksSuccess(response.value));
     } else {

@@ -38,8 +38,10 @@ const Home = (props: HomeProps): JSX.Element => {
   };
 
   const handleSubmit = () => {
-    addTask(value);
-    setValue('');
+    if (value) {
+      addTask(value);
+      setValue('');
+    }
     Keyboard.dismiss();
   };
 
@@ -109,11 +111,9 @@ interface RootState {
 }
 
 const mapStateToProps = (state: RootState) => {
-  console.log('>>> STATE', state);
   const {
     tasks: {toDo},
   } = state;
-  console.log('>>> TO_DOO', toDo);
   return {toDo};
 };
 
