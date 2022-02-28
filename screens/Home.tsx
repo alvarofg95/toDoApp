@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
+  StatusBar,
   View,
   StyleSheet,
   FlatList,
@@ -9,9 +10,11 @@ import {
   Keyboard,
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import Header from '../components/header/default';
 import TaskList from '../components/task-list/default';
 import {
   createTaskRequest,
+  deleteTaskRequest,
   fetchTasksRequest,
   selectTaskRequest,
 } from '../redux/actions';
@@ -22,12 +25,15 @@ interface HomeProps extends PropsFromRedux {
 }
 
 const Home = (props: HomeProps): JSX.Element => {
-  const {toDo, loadTasks, addTask, setCheckedTask, setUnCheckedTask} = props;
+  const {toDo, loadTasks, addTask, setCheckedTask, setUnCheckedTask, onDeleteTask} = props;
   const [value, setValue] = useState<string>('');
 
   useEffect(() => {
-    getTasks();
-  }, []);
+    const getTasks = () => {
+      loadTasks();
+    };
+    return getTasks();
+  }, [loadTasks]);
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
@@ -47,27 +53,32 @@ const Home = (props: HomeProps): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        refreshing={false}
-        onRefresh={getTasks}
-        data={toDo}
-        renderItem={item => (
-          <TaskList
-            {...item}
-            checkTask={setCheckedTask}
-            unCheckTask={setUnCheckedTask}
-          />
-        )}
-      />
-      <View style={styles.inputContainer}>
-        <TextInput
-          value={value}
-          style={styles.input}
-          onChangeText={handleChange}
+      <StatusBar backgroundColor="#00ceb4" />
+      <Header height="20%" />
+      <View style={styles.list}>
+        <FlatList
+          refreshing={false}
+          onRefresh={getTasks}
+          data={toDo}
+          renderItem={item => (
+            <TaskList
+              {...item}
+              checkTask={setCheckedTask}
+              unCheckTask={setUnCheckedTask}
+              onDeleteTask={onDeleteTask}
+            />
+          )}
         />
-        <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
-          <Text style={styles.icon}>+</Text>
-        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <TextInput
+            value={value}
+            style={styles.input}
+            onChangeText={handleChange}
+          />
+          <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
+            <Text style={styles.icon}>+</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -75,8 +86,17 @@ const Home = (props: HomeProps): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1A1A1F',
+    backgroundColor: '#00ceb4',
     height: '100%',
+  },
+  list: {
+    backgroundColor: '#1A1A1F',
+    borderTopStartRadius: 15,
+    borderTopEndRadius: 15,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    height: '80%',
   },
   inputContainer: {
     margin: 10,
@@ -84,6 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    backgroundColor: '#1A1A1F',
   },
   input: {
     backgroundColor: 'white',
@@ -123,6 +144,7 @@ const mapDispatchToProps = (dispatch: any) => {
     addTask: (value: string) => dispatch(createTaskRequest(value)),
     setCheckedTask: (id: string) => dispatch(selectTaskRequest(id)),
     setUnCheckedTask: (id: string) => dispatch(selectTaskRequest(id)),
+    onDeleteTask: (id: string) => dispatch(deleteTaskRequest(id)),
   };
 };
 

@@ -7,6 +7,8 @@ import {
   CREATE_TASK_REQUEST,
   SELECT_TASK_REQUEST,
   SELECT_TASK_FAILURE,
+  DELETE_TASK_REQUEST,
+  DELETE_TASK_FAILURE,
   TaskType,
 } from './actionTypes';
 
@@ -43,4 +45,13 @@ export const selectTaskRequest = (payload: string) => ({
 
 export const selectTaskFailure = () => ({
   type: SELECT_TASK_FAILURE,
+});
+
+export const deleteTaskRequest = (payload: string) => ({
+  type: DELETE_TASK_REQUEST,
+  payload,
+});
+
+export const deleteTaskFailure = () => ({
+  type: DELETE_TASK_FAILURE,
 });

@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, Image} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 
 type TaskProps = {
@@ -10,12 +10,19 @@ type TaskProps = {
   };
   checkTask: any;
   unCheckTask: any;
+  onDeleteTask: any;
 };
 
 const checkIcon = require('../../assets/checked.png');
 const unCheckedIcon = require('../../assets/unchecked.png');
 
-const TaskList: React.FC<TaskProps> = ({item, checkTask, unCheckTask}) => {
+const TaskList: React.FC<TaskProps> = ({
+  item,
+  checkTask,
+  unCheckTask,
+  onDeleteTask,
+}) => {
+  const [showBin, setShowBin] = useState(false);
   const checked = item.done;
   const handleChange = () => {
     if (checked) {
@@ -23,6 +30,17 @@ const TaskList: React.FC<TaskProps> = ({item, checkTask, unCheckTask}) => {
     } else {
       checkTask(item.id);
     }
+    if (showBin) {
+      handleLongPressed();
+    }
+  };
+
+  const handleLongPressed = () => {
+    setShowBin(!showBin);
+  };
+
+  const handleDelete = () => {
+    onDeleteTask(item.id);
   };
 
   let containerStyle = {...styles.container};
@@ -32,22 +50,47 @@ const TaskList: React.FC<TaskProps> = ({item, checkTask, unCheckTask}) => {
       ...styles.checked,
     };
   }
+  if (showBin) {
+    containerStyle.width = '86%';
+  }
 
   const {text} = item;
   return (
-    <CheckBox
-      checkedIcon={<Image style={styles.check} source={checkIcon} />}
-      uncheckedIcon={<Image style={styles.check} source={unCheckedIcon} />}
-      checked={checked}
-      title={text}
-      containerStyle={containerStyle}
-      textStyle={checked ? styles.checkedText : {}}
-      onPress={handleChange}
-    />
+    <View style={styles.buttonContainer}>
+      <CheckBox
+        checkedIcon={<Image style={styles.check} source={checkIcon} />}
+        uncheckedIcon={<Image style={styles.check} source={unCheckedIcon} />}
+        checked={checked}
+        title={text}
+        containerStyle={containerStyle}
+        textStyle={checked ? styles.checkedText : {}}
+        onPress={handleChange}
+        onLongPress={handleLongPressed}
+      />
+      {showBin && (
+        <TouchableOpacity onPress={handleDelete}>
+          <Image
+            style={styles.delete}
+            height={20}
+            width={20}
+            source={require('../../assets/close.png')}
+          />
+        </TouchableOpacity>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  delete: {
+    marginRight: 15,
+    marginTop: 22,
+  },
   container: {
     borderRadius: 10,
     width: '95%',

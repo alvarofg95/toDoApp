@@ -6,6 +6,8 @@ import {
   FETCH_TASKS_SUCCESS,
   SELECT_TASK_FAILURE,
   SELECT_TASK_REQUEST,
+  DELETE_TASK_FAILURE,
+  DELETE_TASK_REQUEST,
 } from './actionTypes';
 
 type TaskProps = {
@@ -45,6 +47,10 @@ const tasksReducer = (state = INITIAL_STATE, action: ActionType) => {
         pending: false,
         error: 'Error al cambiar el estado de la tarea',
       };
+    case DELETE_TASK_REQUEST:
+      return {...state, pending: true};
+    case DELETE_TASK_FAILURE:
+      return {...state, pending: false, error: 'Error al eliminar la tarea'};
     default:
       return state;
   }

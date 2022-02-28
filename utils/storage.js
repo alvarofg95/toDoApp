@@ -1,5 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const deleteTask = async (taskId, list) => {
+  try {
+    const updatedTaskList = list.filter(task => task.id !== taskId);
+    console.log('>>> UPDATED_TASK_LIST', updatedTaskList)
+    console.log('>>> TASK_ID', taskId)
+    await AsyncStorage.setItem(
+      '@todoAppKey123',
+      JSON.stringify(updatedTaskList),
+    );
+    return {success: true};
+  } catch (e) {
+    return {success: false};
+  }
+};
+
 const checkTask = async (taskId, list) => {
   try {
     const taskIndex = list.findIndex(task => task.id === taskId);
@@ -43,4 +58,5 @@ export default {
   getData,
   setData,
   checkTask,
+  deleteTask,
 };
