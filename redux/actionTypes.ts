@@ -12,5 +12,29 @@ export const DELETE_TASK_FAILURE = 'DELETE_TASK_FAILURE';
 export type TaskType = {
   id: string;
   text: string;
-  done: boolean;
+  done?: boolean;
+};
+
+export type CheckTaskProps = {
+  taskId: string;
+  taskList: Array<TaskType>;
+};
+
+export type CreateTaskProps = {
+  taskInfo: string;
+  taskList: Array<TaskType>;
+};
+
+export type CreateTaskSagaProps = {
+  payload: string;
+};
+
+export type ResponseType = {
+  success: boolean;
+  value: Array<TaskType>;
+};
+
+export type ActionType = {
+  type: string;
+  payload: any;
 };

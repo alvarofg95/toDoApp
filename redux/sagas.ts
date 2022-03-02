@@ -14,16 +14,16 @@ import {
   SELECT_TASK_REQUEST,
   DELETE_TASK_REQUEST,
   TaskType,
+  CheckTaskProps,
+  CreateTaskProps,
+  CreateTaskSagaProps,
+  ResponseType,
+  ActionType,
 } from './actionTypes';
 import Storage from '../utils/storage';
 
 const getToDoList = () => {
   return Storage.getData();
-};
-
-type ResponseType = {
-  success: boolean;
-  value: Array<TaskType>;
 };
 
 function* fetchTasksSaga() {
@@ -39,17 +39,8 @@ function* fetchTasksSaga() {
   }
 }
 
-type createTaskProps = {
-  taskInfo: string;
-  taskList: Array<TaskType>;
-};
-
-const createTask = ({taskInfo, taskList}: createTaskProps) => {
+const createTask = ({taskInfo, taskList}: CreateTaskProps) => {
   return Storage.setData(taskInfo, taskList);
-};
-
-type CreateTaskSagaProps = {
-  payload: string;
 };
 
 function* createTaskSaga({payload: taskInfo}: CreateTaskSagaProps) {
@@ -67,20 +58,11 @@ function* createTaskSaga({payload: taskInfo}: CreateTaskSagaProps) {
   }
 }
 
-type CheckTaskProps = {
-  taskId: string;
-  taskList: Array<TaskType>;
-};
-
 const checkTask = ({taskId, taskList}: CheckTaskProps) => {
   return Storage.checkTask(taskId, taskList);
 };
 
-type selectTaskProps = {
-  payload: string;
-};
-
-function* selectTaskSaga({payload: taskId}: selectTaskProps) {
+function* selectTaskSaga({payload: taskId}: CreateTaskSagaProps) {
   try {
     const taskList: Array<TaskType> = yield select(state => state.tasks.toDo);
     const response: ResponseType = yield call(checkTask, {
@@ -100,7 +82,7 @@ const deleteTask = ({taskId, taskList}: CheckTaskProps) => {
   return Storage.deleteTask(taskId, taskList);
 };
 
-function* deleteTaskSaga({payload: taskId}: selectTaskProps) {
+function* deleteTaskSaga({payload: taskId}: CreateTaskSagaProps) {
   try {
     const taskList: Array<TaskType> = yield select(state => state.tasks.toDo);
     const response: ResponseType = yield call(deleteTask, {
@@ -123,9 +105,9 @@ function* deleteTaskSaga({payload: taskId}: selectTaskProps) {
 function* tasksSaga() {
   yield all([
     takeEvery(FETCH_TASKS_REQUEST, fetchTasksSaga),
-    takeEvery(CREATE_TASK_REQUEST, createTaskSaga),
-    takeEvery(SELECT_TASK_REQUEST, selectTaskSaga),
-    takeEvery(DELETE_TASK_REQUEST, deleteTaskSaga),
+    takeEvery<ActionType>(CREATE_TASK_REQUEST, createTaskSaga),
+    takeEvery<ActionType>(SELECT_TASK_REQUEST, selectTaskSaga),
+    takeEvery<ActionType>(DELETE_TASK_REQUEST, deleteTaskSaga),
   ]);
 }
 

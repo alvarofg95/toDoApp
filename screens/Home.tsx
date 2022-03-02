@@ -25,7 +25,14 @@ interface HomeProps extends PropsFromRedux {
 }
 
 const Home = (props: HomeProps): JSX.Element => {
-  const {toDo, loadTasks, addTask, setCheckedTask, setUnCheckedTask, onDeleteTask} = props;
+  const {
+    toDo,
+    loadTasks,
+    addTask,
+    setCheckedTask,
+    setUnCheckedTask,
+    onDeleteTask,
+  } = props;
   const [value, setValue] = useState<string>('');
 
   useEffect(() => {

@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {TaskType} from '../redux/actionTypes';
 
-const deleteTask = async (taskId, list) => {
+const deleteTask = async (taskId: string, list: TaskType[]) => {
   try {
     const updatedTaskList = list.filter(task => task.id !== taskId);
-    console.log('>>> UPDATED_TASK_LIST', updatedTaskList)
-    console.log('>>> TASK_ID', taskId)
     await AsyncStorage.setItem(
       '@todoAppKey123',
       JSON.stringify(updatedTaskList),
@@ -15,7 +14,7 @@ const deleteTask = async (taskId, list) => {
   }
 };
 
-const checkTask = async (taskId, list) => {
+const checkTask = async (taskId: string, list: TaskType[]) => {
   try {
     const taskIndex = list.findIndex(task => task.id === taskId);
     if (taskIndex > -1) {
@@ -28,7 +27,7 @@ const checkTask = async (taskId, list) => {
   }
 };
 
-const setData = async (value, list) => {
+const setData = async (value: string, list: TaskType[]) => {
   try {
     list.push({text: value, id: `${Date.now()}`});
     await AsyncStorage.setItem('@todoAppKey123', JSON.stringify(list));
@@ -38,7 +37,7 @@ const setData = async (value, list) => {
   }
 };
 
-const array = [
+const exampleTask = [
   {id: '1', text: 'Hacer deporte'},
   {id: '2', text: 'Leer'},
   {id: '3', text: 'Pasear'},
@@ -48,7 +47,10 @@ const array = [
 const getData = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem('@todoAppKey123');
-    return {success: true, value: jsonValue ? JSON.parse(jsonValue) : array};
+    return {
+      success: true,
+      value: jsonValue ? JSON.parse(jsonValue) : exampleTask,
+    };
   } catch (e) {
     return {success: false};
   }
