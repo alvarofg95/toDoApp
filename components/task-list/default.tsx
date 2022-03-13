@@ -68,7 +68,7 @@ const TaskList: React.FC<TaskProps> = ({
         onLongPress={handleLongPressed}
       />
       {showBin && (
-        <TouchableOpacity onPress={handleDelete}>
+        <TouchableOpacity onPress={handleDelete} style={styles.deleteContainer}>
           <Image
             style={styles.delete}
             height={20}
@@ -87,9 +87,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
+  deleteContainer: {
+    justifyContent: 'center',
+  },
   delete: {
     marginRight: 15,
-    marginTop: 22,
   },
   container: {
     borderRadius: 10,

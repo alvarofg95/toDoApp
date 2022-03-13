@@ -21,7 +21,6 @@ import {
 
 interface HomeProps extends PropsFromRedux {
   toDo: any;
-  done: any;
 }
 
 const Home = (props: HomeProps): JSX.Element => {
@@ -58,6 +57,10 @@ const Home = (props: HomeProps): JSX.Element => {
     Keyboard.dismiss();
   };
 
+  const EmptyList = () => (
+    <Text style={styles.emptyList}>¡Anímate a crear una tarea!</Text>
+  );
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#00ceb4" />
@@ -67,6 +70,7 @@ const Home = (props: HomeProps): JSX.Element => {
           refreshing={false}
           onRefresh={getTasks}
           data={toDo}
+          ListEmptyComponent={<EmptyList />}
           renderItem={item => (
             <TaskList
               {...item}
@@ -92,6 +96,12 @@ const Home = (props: HomeProps): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
+  emptyList: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+    marginTop: 50,
+  },
   container: {
     backgroundColor: '#00ceb4',
     height: '100%',
