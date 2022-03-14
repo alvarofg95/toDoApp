@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
+import ThemeContext from '../context/default';
 
 type TaskProps = {
   item: {
@@ -22,6 +23,7 @@ const TaskList: React.FC<TaskProps> = ({
   unCheckTask,
   onDeleteTask,
 }) => {
+  const {isDarkTheme} = useContext(ThemeContext);
   const [showBin, setShowBin] = useState(false);
   const checked = item.done;
   const handleChange = () => {
@@ -44,11 +46,23 @@ const TaskList: React.FC<TaskProps> = ({
   };
 
   let containerStyle = {...styles.container};
+  if (isDarkTheme) {
+    containerStyle = {
+      ...containerStyle,
+      ...styles.darkBackground,
+    };
+  }
   if (checked) {
     containerStyle = {
       ...containerStyle,
       ...styles.checked,
     };
+    if (isDarkTheme) {
+      containerStyle = {
+        ...containerStyle,
+        ...styles.checkedDark,
+      };
+    }
   }
   if (showBin) {
     containerStyle.width = '86%';
@@ -101,6 +115,10 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
     opacity: 1,
   },
+  darkBackground: {
+    backgroundColor: '#9d9c9c',
+    borderColor: '#9d9c9c',
+  },
   text: {
     color: '#000',
     fontSize: 15,
@@ -115,6 +133,10 @@ const styles = StyleSheet.create({
   checked: {
     backgroundColor: '#9d9c9c',
     borderColor: '#9d9c9c',
+  },
+  checkedDark: {
+    backgroundColor: '#3c3636',
+    borderColor: '#3c3636',
   },
 });
 

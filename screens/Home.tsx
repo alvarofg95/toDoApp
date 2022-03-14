@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StatusBar,
   View,
@@ -10,6 +10,7 @@ import {
   Keyboard,
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import ThemeContext from '../components/context/default';
 import Header from '../components/header/default';
 import TaskList from '../components/task-list/default';
 import {
@@ -32,6 +33,9 @@ const Home = (props: HomeProps): JSX.Element => {
     setUnCheckedTask,
     onDeleteTask,
   } = props;
+
+  const {isDarkTheme} = useContext(ThemeContext);
+
   const [value, setValue] = useState<string>('');
 
   useEffect(() => {
@@ -61,6 +65,29 @@ const Home = (props: HomeProps): JSX.Element => {
     <Text style={styles.emptyList}>¡Anímate a crear una tarea!</Text>
   );
 
+  let inputContainerStyle = {
+    ...styles.inputContainer,
+  };
+  let inputStyle = {
+    ...styles.input,
+  };
+  let addButtonStyle = {
+    ...styles.addButton,
+  };
+  if (isDarkTheme) {
+    inputContainerStyle = {
+      ...inputContainerStyle,
+    };
+    inputStyle = {
+      ...inputStyle,
+      ...styles.darkBackground,
+    };
+    addButtonStyle = {
+      ...addButtonStyle,
+      ...styles.darkBackground,
+    };
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#00ceb4" />
@@ -80,13 +107,13 @@ const Home = (props: HomeProps): JSX.Element => {
             />
           )}
         />
-        <View style={styles.inputContainer}>
+        <View style={inputContainerStyle}>
           <TextInput
             value={value}
-            style={styles.input}
+            style={inputStyle}
             onChangeText={handleChange}
           />
-          <TouchableOpacity style={styles.addButton} onPress={handleSubmit}>
+          <TouchableOpacity style={addButtonStyle} onPress={handleSubmit}>
             <Text style={styles.icon}>+</Text>
           </TouchableOpacity>
         </View>
@@ -114,6 +141,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     height: '80%',
+  },
+  darkBackground: {
+    backgroundColor: '#3c3636',
   },
   inputContainer: {
     margin: 10,
