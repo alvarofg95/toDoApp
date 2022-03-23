@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StatusBar,
   View,
@@ -10,7 +10,6 @@ import {
   Keyboard,
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
-import ThemeContext from '../components/context/default';
 import Header from '../components/header/default';
 import TaskList from '../components/task-list/default';
 import {
@@ -33,8 +32,6 @@ const Home = (props: HomeProps): JSX.Element => {
     setUnCheckedTask,
     onDeleteTask,
   } = props;
-
-  const {isDarkTheme} = useContext(ThemeContext);
 
   const [value, setValue] = useState<string>('');
 
@@ -74,19 +71,6 @@ const Home = (props: HomeProps): JSX.Element => {
   let addButtonStyle = {
     ...styles.addButton,
   };
-  if (isDarkTheme) {
-    inputContainerStyle = {
-      ...inputContainerStyle,
-    };
-    inputStyle = {
-      ...inputStyle,
-      ...styles.darkBackground,
-    };
-    addButtonStyle = {
-      ...addButtonStyle,
-      ...styles.darkBackground,
-    };
-  }
 
   return (
     <View style={styles.container}>

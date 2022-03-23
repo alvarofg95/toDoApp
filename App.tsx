@@ -1,18 +1,18 @@
-import React from 'react';
-import {Appearance} from 'react-native';
+import React, {useEffect} from 'react';
+import SplashScreen from 'react-native-splash-screen';
 import {Provider} from 'react-redux';
-import ThemeContext from './components/context/default';
 import store from './redux/store';
 import Routes from './routes/Routes';
 
 const App: React.FC = () => {
-  const isDarkTheme = Appearance.getColorScheme() === 'dark';
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
-    <ThemeContext.Provider value={{isDarkTheme}}>
-      <Provider store={store}>
-        <Routes />
-      </Provider>
-    </ThemeContext.Provider>
+    <Provider store={store}>
+      <Routes />
+    </Provider>
   );
 };
 

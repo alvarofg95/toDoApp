@@ -1,7 +1,6 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import ThemeContext from '../context/default';
 
 type TaskProps = {
   item: {
@@ -23,7 +22,6 @@ const TaskList: React.FC<TaskProps> = ({
   unCheckTask,
   onDeleteTask,
 }) => {
-  const {isDarkTheme} = useContext(ThemeContext);
   const [showBin, setShowBin] = useState(false);
   const checked = item.done;
   const handleChange = () => {
@@ -46,23 +44,11 @@ const TaskList: React.FC<TaskProps> = ({
   };
 
   let containerStyle = {...styles.container};
-  if (isDarkTheme) {
-    containerStyle = {
-      ...containerStyle,
-      ...styles.darkBackground,
-    };
-  }
   if (checked) {
     containerStyle = {
       ...containerStyle,
       ...styles.checked,
     };
-    if (isDarkTheme) {
-      containerStyle = {
-        ...containerStyle,
-        ...styles.checkedDark,
-      };
-    }
   }
   if (showBin) {
     containerStyle.width = '86%';
