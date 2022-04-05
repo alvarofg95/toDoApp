@@ -1,4 +1,4 @@
-package com.todoapp;
+package com.quicktask;
 
 import com.facebook.react.ReactActivity;
 import org.devio.rn.splashscreen.SplashScreen;
